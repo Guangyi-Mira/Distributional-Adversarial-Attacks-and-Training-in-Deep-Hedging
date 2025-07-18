@@ -100,8 +100,3 @@ Guidance on assessing network performance on a given dataset are provided in the
 ## Distributionally Adversarial Attack
 
 In `src/Heston_att.ipynb`, we provide guidance for performing distributionally adversarial attacks as well as comparing autocorrelation functions (ACF) and covariance differences between perturbed and original data as described in Section 5.1 and Appendix E.1.
-
-
-
-
-
