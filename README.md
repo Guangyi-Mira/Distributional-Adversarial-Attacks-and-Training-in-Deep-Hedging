@@ -1,3 +1,8 @@
+## Code for the paper *Distributional Adversarial Attacks and Training in Deep Hedging*
+
+This repository contains the code to replicate all experimental results of the paper *Distributional Adversarial Attacks and Training in
+Deep Hedging*. 
+
 ## Requirements
 
 ### Installation
