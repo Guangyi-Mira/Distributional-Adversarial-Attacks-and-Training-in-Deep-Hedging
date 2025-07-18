@@ -28,6 +28,7 @@ pip install panda
 ```sh
 python BS_generator.py
 python Heston_generator.py
+python GAD_generator.py
 ```
 Datasets will be stored in `'Data'`
 
