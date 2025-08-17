@@ -33,9 +33,10 @@ pip install panda
 ```sh
 python BS_generator.py
 python Heston_generator.py
-python GAD_generator.py
 ```
-Datasets will be stored in `'Data'`
+Open `GAD_generator.ipynb` and run all cells in the notebook.
+
+All datasets will be stored in `'Data'`
 
 
 ## Training Scripts on BS and Heston model
