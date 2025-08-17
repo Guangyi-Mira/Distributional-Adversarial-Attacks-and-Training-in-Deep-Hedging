@@ -87,6 +87,8 @@ for part in range(0, int(1e5/N)):
     train_data = torch.utils.data.TensorDataset(Heston_data_train[0][index_start:index_end], Heston_data_train[1][index_start:index_end], Heston_data_train[2][index_start:index_end])
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
     network = RNN_BN_simple(sequence_length=sequence_length).to(device=device)
+    # For Recurrent structure, replace above line by:
+    # network = RNN_BN(sequence_length=sequence_length).to(device=device)
     loss_fn = loss_CVAR(Strike_price=K, vol=sigma, T=T, alpha_loss=alpha_loss, trans_cost_rate=transaction_cost_rate, p0_mode='given').to(device=device)
     p0_clean = nn.Parameter(torch.tensor(1.69))
     opt = torch.optim.Adam([
@@ -107,7 +109,7 @@ for part in range(0, int(1e5/N)):
         print(f"epoch {i}, train loss: {train_result}, time: {time2-time1}")
         LR_scheduler.step()
 
-    # Save trained networks
+    # Save trained network
     network.to('cpu')
     network.device = 'cpu'
     torch.save(network.state_dict(), f"../Result/{name}_part{int(part)+1}.pth")

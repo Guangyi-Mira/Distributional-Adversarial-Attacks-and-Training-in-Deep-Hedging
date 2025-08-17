@@ -157,7 +157,7 @@ for part in range(0, int(1e5/N)):
         print(f"epoch{i},clean_loss: {train_result[1]:.6f}, att_loss: {train_result[0]:.6f},time: {time2-time1}s, p0_clean: {p0_clean.item()}, p0_att: {p0_att.item()}")
         LR_scheduler.step()
 
-    # Save trained networks
+    # Save trained network
     network.to('cpu')
     network.device = 'cpu'
     torch.save(network.state_dict(), f"../Result/{name}_part{int(part)+1}.pth")
