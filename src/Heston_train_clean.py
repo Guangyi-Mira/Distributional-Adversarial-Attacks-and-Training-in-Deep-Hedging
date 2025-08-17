@@ -20,6 +20,18 @@ def alpha_learning_rate(epoch):
         return 0.001
 
 def epoch_loader(loader, network, loss_fn, opt=None):
+    """
+    Runs one epoch of training or evaluation for clean (non-adversarial) training.
+
+    Args:
+        loader: DataLoader providing batches of price data.
+        network: Neural network model.
+        loss_fn: Loss function.
+        opt: Optimizer (if training, None for evaluation).
+
+    Returns:
+        Average loss for the epoch.
+    """
     total_loss = 0.
     for S,V ,VarPrice in loader:
         S, V, VarPrice = S.to(device), V.to(device), VarPrice.to(device)
@@ -65,12 +77,13 @@ N = args.N
 transaction_cost_rate = args.transaction_cost_rate
 
 name = f"HestonClean_N{N:.0e}_tran{transaction_cost_rate:.0e}".replace("+0", "").replace("-0", "-")
-
+# Load training data
 Heston_data_train = torch.load('../Data/Heston_train.pt')
-
+# Loop over data partitions
 for part in range(0, int(1e5/N)):
     index_start = int(part*N)
     index_end = int((part+1)*N)
+    # Prepare partitioned training data and loader
     train_data = torch.utils.data.TensorDataset(Heston_data_train[0][index_start:index_end], Heston_data_train[1][index_start:index_end], Heston_data_train[2][index_start:index_end])
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
     network = RNN_BN_simple(sequence_length=sequence_length).to(device=device)
@@ -84,7 +97,7 @@ for part in range(0, int(1e5/N)):
     attacker = Heston_Attacker(loss_fn=loss_CVAR(Strike_price=K, vol=sigma, T=T, alpha_loss=alpha_loss, trans_cost_rate=transaction_cost_rate, p0_mode='search').to(device=device),
                                 s0=s0, v0=v0, alpha=alpha, b=b, sigma=sigma, rho=rho, timestep=sequence_length, T=T)
 
-
+    # Training loop
     print(f'Start Running {name}_part{int(part)}')
     for i in range(epoch_num):
         time1 = time.time()
@@ -94,7 +107,7 @@ for part in range(0, int(1e5/N)):
         print(f"epoch {i}, train loss: {train_result}, time: {time2-time1}")
         LR_scheduler.step()
 
-
+    # Save trained networks
     network.to('cpu')
     network.device = 'cpu'
     torch.save(network.state_dict(), f"../Result/{name}_part{int(part)+1}.pth")
